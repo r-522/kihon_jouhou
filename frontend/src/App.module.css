@@ -23,10 +23,17 @@
 
 .buttons {
   display: flex;
-  flex-direction: column;
-  gap: 16px;
+  flex-direction: row;
+  gap: 24px;
   width: 100%;
-  max-width: 360px;
+  max-width: 720px;
+}
+
+@media (max-width: 640px) {
+  .buttons {
+    flex-direction: column;
+    max-width: 360px;
+  }
 }
 
 .btnPrimary {
@@ -43,7 +50,10 @@
   font-weight: 600;
   color: var(--text-primary);
   cursor: pointer;
-  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease,
+    background 0.15s ease;
   width: 100%;
 }
 

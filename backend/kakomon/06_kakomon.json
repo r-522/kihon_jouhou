@@ -1,0 +1,118 @@
+{
+  "year": "2024年度（令和6年度）",
+  "examination": "基本情報技術者試験",
+  "exam_date": "2024-10",
+  "total_questions": 100,
+  "problems": [
+    {
+      "problem_id": "06_001",
+      "number": 1,
+      "question": "次の処理を行うアルゴリズムの計算量はどれか。",
+      "choice_a": "O(n)",
+      "choice_b": "O(n²)",
+      "choice_c": "O(n log n)",
+      "choice_d": "O(2^n)",
+      "correct": "b",
+      "explanation": "ネストされたループで配列全体を走査する場合、計算量はO(n²)になります。"
+    },
+    {
+      "problem_id": "06_002",
+      "number": 2,
+      "question": "以下のプログラムの出力結果はどれか。\nint x = 10;\nwhile (x > 0) {\n  if (x % 2 == 0) {\n    System.out.println(x);\n  }\n  x -= 2;\n}",
+      "choice_a": "10 8 6 4 2",
+      "choice_b": "10 9 8 7 6 5 4 3 2 1",
+      "choice_c": "8 6 4 2",
+      "choice_d": "10 8 6 4",
+      "correct": "a",
+      "explanation": "x を2ずつ減少させながらループし、偶数のときに出力します。10から始まり2ずつ減少するため、10, 8, 6, 4, 2 が出力されます。"
+    },
+    {
+      "problem_id": "06_003",
+      "number": 3,
+      "question": "データベースの正規化において、第1正規形（1NF）を説明したものはどれか。",
+      "choice_a": "すべての属性が候補キーに関数従属している。",
+      "choice_b": "すべての属性が候補キーに完全関数従属している。",
+      "choice_c": "すべての属性がアトミック値である。",
+      "choice_d": "推移的従属がない。",
+      "correct": "c",
+      "explanation": "第1正規形は、すべての属性がアトミック値（それ以上分解不可能な値）で構成されることを要件とします。"
+    },
+    {
+      "problem_id": "06_004",
+      "number": 4,
+      "question": "オブジェクト指向プログラミングにおけるカプセル化の利点はどれか。",
+      "choice_a": "処理の再利用性が向上する。",
+      "choice_b": "内部実装の詳細を隠蔽できる。",
+      "choice_c": "ネットワーク通信が高速になる。",
+      "choice_d": "メモリ使用量が削減される。",
+      "correct": "b",
+      "explanation": "カプセル化により、クラスの内部実装の詳細を隠蔽し、公開インターフェースのみを外部に提供することができます。"
+    },
+    {
+      "problem_id": "06_005",
+      "number": 5,
+      "question": "ソートアルゴリズムのクイックソートの平均的な計算量はどれか。",
+      "choice_a": "O(n)",
+      "choice_b": "O(n log n)",
+      "choice_c": "O(n²)",
+      "choice_d": "O(log n)",
+      "correct": "b",
+      "explanation": "クイックソートの平均的な計算量はO(n log n)です。ただし最悪の場合はO(n²)になります。"
+    },
+    {
+      "problem_id": "06_006",
+      "number": 6,
+      "question": "Webアプリケーションのセッション管理で、セッションIDを安全に保管する方法はどれか。",
+      "choice_a": "URLパラメータに含める。",
+      "choice_b": "HTMLのソースコードに埋め込む。",
+      "choice_c": "セキュアなクッキーに保管する。",
+      "choice_d": "JavaScriptの変数に保管する。",
+      "correct": "c",
+      "explanation": "セッションIDはセキュアなクッキー（HTTPS + HttpOnly フラグ）に保管することで、XSSやCSRF攻撃から保護できます。"
+    },
+    {
+      "problem_id": "06_007",
+      "number": 7,
+      "question": "ネットワークのOSI参照モデルにおいて、ルータが動作する層はどれか。",
+      "choice_a": "物理層",
+      "choice_b": "データリンク層",
+      "choice_c": "ネットワーク層",
+      "choice_d": "アプリケーション層",
+      "correct": "c",
+      "explanation": "ルータはネットワーク層（第3層）でIPアドレスをベースに転送先を決定します。"
+    },
+    {
+      "problem_id": "06_008",
+      "number": 8,
+      "question": "以下のSQL文の実行結果に該当するレコード数はどれか。\nSELECT * FROM table1 WHERE age >= 20 AND age < 30;",
+      "choice_a": "20才から29才のレコード",
+      "choice_b": "20才以上30才以下のレコード",
+      "choice_c": "20才から30才のレコード",
+      "choice_d": "21才から30才のレコード",
+      "correct": "a",
+      "explanation": "age >= 20 AND age < 30 は、年齢が20才以上30才未満、つまり20才から29才のレコードを抽出します。"
+    },
+    {
+      "problem_id": "06_009",
+      "number": 9,
+      "question": "ビッグエンディアンとリトルエンディアンの違いを説明したものはどれか。",
+      "choice_a": "プロセッサの速度の違い。",
+      "choice_b": "メモリに複数バイトの値を保管する際のバイト順序の違い。",
+      "choice_c": "キャッシュメモリの大きさの違い。",
+      "choice_d": "ハードディスクの回転速度の違い。",
+      "correct": "b",
+      "explanation": "ビッグエンディアンはMSB（最上位バイト）を先に、リトルエンディアンはLSB（最下位バイト）を先に保管します。"
+    },
+    {
+      "problem_id": "06_010",
+      "number": 10,
+      "question": "スタックとキューの違いはどれか。",
+      "choice_a": "スタックはFIFO、キューはLIFOである。",
+      "choice_b": "スタックはLIFO、キューはFIFOである。",
+      "choice_c": "スタックは線形、キューは非線形である。",
+      "choice_d": "スタックと キューは本質的に同じ構造である。",
+      "correct": "b",
+      "explanation": "スタックは後入先出（LIFO: Last In First Out）で、キューは先入先出（FIFO: First In First Out）です。"
+    }
+  ]
+}

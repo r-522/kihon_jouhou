@@ -66,7 +66,10 @@
   color: var(--text-primary);
   text-align: left;
   cursor: pointer;
-  transition: background 0.12s, border-color 0.12s, transform 0.1s;
+  transition:
+    background 0.12s,
+    border-color 0.12s,
+    transform 0.1s;
 }
 
 .choice:not(:disabled):hover {
@@ -123,8 +126,14 @@
 }
 
 @keyframes slideUp {
-  from { transform: translateY(100%); opacity: 0; }
-  to   { transform: translateY(0);    opacity: 1; }
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
 .feedbackCorrect {
@@ -138,7 +147,7 @@
 }
 
 .next {
-  background: rgba(255,255,255,0.25);
+  background: rgba(255, 255, 255, 0.25);
   border: none;
   border-radius: 8px;
   color: #fff;
@@ -150,7 +159,7 @@
 }
 
 .next:hover {
-  background: rgba(255,255,255,0.35);
+  background: rgba(255, 255, 255, 0.35);
 }
 
 .center {

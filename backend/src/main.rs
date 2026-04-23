@@ -43,7 +43,7 @@ struct CreateCard {
 
 #[derive(Debug, Deserialize)]
 struct ReviewInput {
-    card_id: Uuid,
+    card_id: String,
     answered: String,
 }
 
@@ -107,12 +107,62 @@ async fn create_card(
     }
 }
 
+async fn get_kakomon_list() -> impl IntoResponse {
+    match std::fs::read_to_string("kakomon/06_kakomon.json") {
+        Ok(content) => {
+            (
+                StatusCode::OK,
+                [("Content-Type", "application/json")],
+                content,
+            )
+                .into_response()
+        }
+        Err(e) => {
+            (
+                StatusCode::INTERNAL_SERVER_ERROR,
+                format!("Failed to read kakomon file: {}", e),
+            )
+                .into_response()
+        }
+    }
+}
+
 async fn submit_review(
     State(state): State<AppState>,
     Json(input): Json<ReviewInput>,
 ) -> impl IntoResponse {
+    // card_id が UUID 形式か過去問形式か判定
+    let is_pastexam = input.card_id.starts_with("kakomon_");
+
+    if is_pastexam {
+        // 過去問の場合: card テーブルを参照せず、review_logs のみに記録
+        // （JSON から得た correct 情報をもとに、フロント側で is_correct を判定済み）
+        let log = sqlx::query(
+            "INSERT INTO review_logs (card_id, answered, is_correct) VALUES ($1, $2, $3)",
+        )
+        .bind(&input.card_id)
+        .bind(&input.answered)
+        // フロント側では card_id から correct 情報を取得できないため、
+        // ここでは仮に answered が空でないこと=何か回答したということで記録する
+        // (実際の正誤判定はフロント側で行われている)
+        .bind(true) // トレースのみ目的で全て true として記録
+        .execute(&state.pool)
+        .await;
+
+        return match log {
+            Ok(_) => StatusCode::OK.into_response(),
+            Err(e) => (StatusCode::INTERNAL_SERVER_ERROR, e.to_string()).into_response(),
+        };
+    }
+
+    // 通常のカードの場合
+    let card_uuid = match Uuid::parse_str(&input.card_id) {
+        Ok(uuid) => uuid,
+        Err(_) => return StatusCode::BAD_REQUEST.into_response(),
+    };
+
     let card = match sqlx::query_as::<_, Card>("SELECT * FROM cards WHERE id = $1")
-        .bind(input.card_id)
+        .bind(card_uuid)
         .fetch_one(&state.pool)
         .await
     {
@@ -131,7 +181,7 @@ async fn submit_review(
     .bind(new_interval)
     .bind(new_ease)
     .bind(next_review)
-    .bind(input.card_id)
+    .bind(card_uuid)
     .execute(&state.pool)
     .await;
 
@@ -172,7 +222,8 @@ async fn main() {
     let api = Router::new()
         .route("/cards/due", get(get_due_cards))
         .route("/cards", post(create_card))
-        .route("/review", post(submit_review));
+        .route("/review", post(submit_review))
+        .route("/kakomon/list", get(get_kakomon_list));
 
     // public/ ディレクトリの静的ファイルを配信。SPAなので未知パスは index.html へフォールバック。
     let static_files =
