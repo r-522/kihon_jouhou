@@ -1,6 +1,11 @@
 import { useEffect, useState, useCallback } from "react";
-import { getDueCards, submitReview } from "../lib/api";
-import { CHOICE_LABELS, type Card, type ChoiceKey } from "../lib/types";
+import { getPastExams, submitPastExamReview } from "../lib/api";
+import {
+  CHOICE_LABELS,
+  type PastExamProblem,
+  type PastExamData,
+  type ChoiceKey,
+} from "../lib/types";
 import styles from "./StudyView.module.css";
 
 type Props = { onBack: () => void };
@@ -16,22 +21,22 @@ function shuffle<T>(arr: T[]): T[] {
   return a;
 }
 
-export default function StudyView({ onBack }: Props) {
-  const [cards, setCards] = useState<Card[]>([]);
+export default function PastExamView({ onBack }: Props) {
+  const [data, setData] = useState<PastExamData | null>(null);
   const [index, setIndex] = useState(0);
   const [choices, setChoices] = useState<ShuffledChoice[]>([]);
   const [selected, setSelected] = useState<ChoiceKey | null>(null);
   const [phase, setPhase] = useState<Phase>("loading");
 
-  const loadCards = useCallback(async () => {
+  const loadExams = useCallback(async () => {
     setPhase("loading");
     try {
-      const data = await getDueCards();
-      if (!data.length) {
+      const examData = await getPastExams();
+      if (!examData.problems.length) {
         setPhase("done");
         return;
       }
-      setCards(data);
+      setData(examData);
       setIndex(0);
       setPhase("question");
     } catch {
@@ -40,33 +45,37 @@ export default function StudyView({ onBack }: Props) {
   }, []);
 
   useEffect(() => {
-    loadCards();
-  }, [loadCards]);
+    loadExams();
+  }, [loadExams]);
 
   useEffect(() => {
-    if (phase !== "question" || !cards[index]) return;
-    const card = cards[index];
+    if (phase !== "question" || !data || !data.problems[index]) return;
+    const problem = data.problems[index];
     const raw: ShuffledChoice[] = (["a", "b", "c", "d"] as ChoiceKey[]).map(
       (k) => ({
         key: k,
         label: CHOICE_LABELS[k],
-        text: card[`choice_${k}` as keyof Card] as string,
+        text: problem[`choice_${k}` as keyof PastExamProblem] as string,
       }),
     );
     setChoices(shuffle(raw));
     setSelected(null);
-  }, [phase, index, cards]);
+  }, [phase, index, data]);
 
   const handleSelect = async (key: ChoiceKey) => {
     if (selected) return;
     setSelected(key);
     setPhase("result");
-    await submitReview(cards[index].id, key).catch(() => {});
+    if (data) {
+      const problem = data.problems[index];
+      await submitPastExamReview(problem.problem_id, key).catch(() => {});
+    }
   };
 
   const next = () => {
+    if (!data) return;
     const nextIndex = index + 1;
-    if (nextIndex >= cards.length) {
+    if (nextIndex >= data.problems.length) {
       setPhase("done");
       return;
     }
@@ -74,22 +83,21 @@ export default function StudyView({ onBack }: Props) {
     setPhase("question");
   };
 
-  const card = cards[index];
-
   if (phase === "loading")
     return <CenterMessage onBack={onBack}>読み込み中…</CenterMessage>;
-  if (phase === "done")
+  if (phase === "done" || !data)
     return (
       <CenterMessage onBack={onBack}>
         <span style={{ fontSize: "2.4rem" }}>🎉</span>
-        <strong>本日の学習完了</strong>
+        <strong>過去問学習完了</strong>
         <span style={{ fontSize: "0.9rem", color: "var(--text-secondary)" }}>
-          復習カードがありません
+          全問題の解答が終わりました
         </span>
       </CenterMessage>
     );
 
-  const isCorrect = selected === card.correct;
+  const problem = data.problems[index];
+  const isCorrect = selected === problem.correct;
 
   return (
     <div className={styles.container}>
@@ -98,19 +106,19 @@ export default function StudyView({ onBack }: Props) {
           ‹ 戻る
         </button>
         <span className={styles.progress}>
-          {index + 1} / {cards.length}
+          {index + 1} / {data.problems.length}
         </span>
       </header>
 
       <div className={styles.card}>
-        <p className={styles.question}>{card.question}</p>
+        <p className={styles.question}>{problem.question}</p>
       </div>
 
       <div className={styles.choices}>
         {choices.map((c) => {
           let mod = "";
           if (selected) {
-            if (c.key === card.correct) mod = styles.correct;
+            if (c.key === problem.correct) mod = styles.correct;
             else if (c.key === selected) mod = styles.wrong;
           }
           return (
@@ -134,8 +142,13 @@ export default function StudyView({ onBack }: Props) {
           <span>
             {isCorrect
               ? "正解！"
-              : `不正解　正解は「${CHOICE_LABELS[card.correct]}」`}
+              : `不正解　正解は「${CHOICE_LABELS[problem.correct]}」`}
           </span>
+          <div style={{ marginTop: "12px", fontSize: "0.9rem" }}>
+            <p style={{ color: "var(--text-secondary)" }}>
+              {problem.explanation}
+            </p>
+          </div>
           <button className={styles.next} onClick={next}>
             次へ ›
           </button>
