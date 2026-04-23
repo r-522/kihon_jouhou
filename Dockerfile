@@ -11,7 +11,7 @@ RUN npm run build
 # ─────────────────────────────────────────
 # Stage 2: Rust バックエンドのビルド
 # ─────────────────────────────────────────
-FROM rust:1.82-alpine AS backend-build
+FROM rust:1.85-alpine AS backend-build
 RUN apk add --no-cache musl-dev
 WORKDIR /app/backend
 
