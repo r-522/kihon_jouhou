@@ -1,0 +1,32 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cargo fmt --quiet 2>/dev/null || true",
+            "statusMessage": "Formatting Rust..."
+          },
+          {
+            "type": "command",
+            "command": "prettier --write . --ignore-unknown 2>/dev/null || true",
+            "statusMessage": "Formatting with Prettier..."
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cargo check 2>/dev/null || true",
+            "statusMessage": "Running cargo check..."
+          }
+        ]
+      }
+    ]
+  }
+}

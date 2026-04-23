@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Skill(update-config)",
+      "Bash(where jq *)",
+      "Bash(node -e \"process.stdout.write\\('ok'\\)\")",
+      "Bash(powershell *)",
+      "Bash(git init *)",
+      "Bash(git remote *)",
+      "Bash(git config *)",
+      "Bash(git checkout *)",
+      "Bash(git add *)"
+    ]
+  }
+}

@@ -1,0 +1,5 @@
+ルール違反を人間がレビューする前に、構造が自動で検知・修正するようにします。
+
+設定例:
+Edit|Write イベント: 保存時に Rust の cargo fmt と React の prettier を強制実行。
+Stop イベント: タスク完了前に Rust の型チェック (cargo check) を実行し、ロジックの破綻を防ぐ。
