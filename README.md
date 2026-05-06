@@ -1,0 +1,1 @@
+# kihon_jouhou
